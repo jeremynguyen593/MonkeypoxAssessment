@@ -14,7 +14,6 @@ import java.awt.event.*;
  * @version 8-25-2022
  */
 public class Result extends JFrame implements ActionListener{
-
     /**
      * The name of the user.
      */
@@ -33,14 +32,20 @@ public class Result extends JFrame implements ActionListener{
     JButton exit, fullResults;
 
     /**
+     * The risk level the user is at based off their assessment answers.
+     */
+    private String risk;
+    /**
      * The results page of the assessment.
      * 
      * @param name the name of the user
      * @param userAnswers the user's answers
      */
-    public Result(String name, ArrayList<String> userAnswers) {
+    public Result(String name, ArrayList<String> userAnswers, int counter, String risk) {
         this.name = name;
         this.userAnswers = userAnswers;
+        this.counter = counter;
+        this.risk = risk;
 
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -52,14 +57,9 @@ public class Result extends JFrame implements ActionListener{
         header.setBounds(-50, -25, 700, 200);
         header.setFont(new Font ("Bahnschrift", Font.BOLD, 40));
         add(header);
-        
-        for (int i = 0; i < userAnswers.size(); i++) {
-            if (userAnswers.get(i).equals("Yes")) {
-                counter++;
-            }
-        }
+
         if (counter == 3) {
-            JLabel highRisk = new JLabel("High Risk", SwingConstants.CENTER);
+            JLabel highRisk = new JLabel(getRisk(), SwingConstants.CENTER);
             highRisk.setBounds(42, 120, 515, 125);
             highRisk.setForeground(Color.WHITE);
             highRisk.setBackground(Color.RED);
@@ -67,7 +67,7 @@ public class Result extends JFrame implements ActionListener{
             highRisk.setFont(new Font ("Jolly", Font.ITALIC, 50));
             add(highRisk);
         } else if (counter == 1 || counter == 2) {
-            JLabel potentialRisk = new JLabel("At Risk", SwingConstants.CENTER);
+            JLabel potentialRisk = new JLabel(getRisk(), SwingConstants.CENTER);
             potentialRisk.setBounds(42, 120, 515, 125);
             potentialRisk.setForeground(Color.WHITE);
             potentialRisk.setBackground(Color.ORANGE);
@@ -75,7 +75,7 @@ public class Result extends JFrame implements ActionListener{
             potentialRisk.setFont(new Font ("Jolly", Font.ITALIC, 50));
             add(potentialRisk);
         } else {
-            JLabel noRisk = new JLabel("No Risk", SwingConstants.CENTER);
+            JLabel noRisk = new JLabel(getRisk(), SwingConstants.CENTER);
             noRisk.setBounds(42, 120, 515, 125);
             noRisk.setForeground(Color.WHITE);
             noRisk.setBackground(Color.GREEN);
@@ -135,12 +135,27 @@ public class Result extends JFrame implements ActionListener{
         return counter;
     }
     /**
+     * Sets the risk level of the user.
+     * 
+     * @param risk the risk level of the user
+     */
+    public void setRisk(String risk) {
+        this.risk = risk;
+    }
+    /**
+     * Returns the risk level of the user.
+     */
+    public String getRisk() {
+        return risk;
+    }
+
+    /**
      * The main method of the classes to open up the results page.
      * 
      * @param args an array of command-line arguments for the application
      */
     public static void main (String[]args) {
         ArrayList<String> holder = new ArrayList<String>();
-        new Result("User", holder);
+        new Result("User", holder, 0, "Risk");
     }
 }

@@ -13,7 +13,6 @@ import java.awt.event.*;
  * @version 8-25-2022
  */
 public class FullResults extends JFrame implements ActionListener {
-
     /**
      * The array of strings of the user's answers.
      */

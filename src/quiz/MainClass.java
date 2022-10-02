@@ -2,27 +2,28 @@ package quiz;
 
 import java.sql.*;
 
-/*
+/**
  * Sets up the main class at which the user should run the program.
  * 
  * @author Jeremy Nguyen
  * @version 9-13-2022
  */
 public class MainClass {
-    /*
-     * The driver for the mySQL connection.
-     */
-    static final String DRIVER = "com.mysql.jdbc.Driver";
-    /*
+    /**
      * The URL to use the JDBC API to connect to the local host.
      */
     static final String URL = "jdbc:mysql://localhost:3306/";
 
-    /*
+    /**
+     * The URL to connect to the database of the assessment.
+     */
+    static final String URL_2 = "jdbc:mysql://localhost:3306/MONKEYPOXASSESSMENT";
+
+    /**
      * The username for the mySQL login.
      */
     static final String USER = "root";
-    /*
+    /**
      * The password for the mySQL login.
      */
     static final String PASS = "";
@@ -35,14 +36,23 @@ public class MainClass {
         Connection conn = null;
         Statement stmt = null;
 
-        Class.forName(DRIVER);
-
         conn = DriverManager.getConnection(URL, USER, PASS);
         stmt = conn.createStatement();
 
         String sql = "CREATE DATABASE IF NOT EXISTS MONKEYPOXASSESSMENT";
         stmt.executeUpdate(sql);
-        System.out.println("Sucess");
+
+        conn = DriverManager.getConnection(URL_2, USER, PASS);
+        stmt = conn.createStatement();
+        
+        String table = "CREATE TABLE IF NOT EXISTS DATA" +
+                       "(ID int NOT NULL auto_increment," +
+                        "NAME VARCHAR(255)," +
+                       "RISK VARCHAR(255)," +
+                       "TIME TIMESTAMP," +
+                       "PRIMARY KEY (ID))";
+        
+        stmt.executeUpdate(table);
 
         stmt.close();
         conn.close();

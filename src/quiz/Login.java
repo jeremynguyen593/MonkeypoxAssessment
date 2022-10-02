@@ -90,7 +90,8 @@ public class Login extends JFrame implements ActionListener{
      * 
      * @param ae takes in any clicked buttons
      */
-    public void actionPerformed(ActionEvent ae) {
+
+    public void actionPerformed(ActionEvent ae){
         //takes the name of user and opens up the next page when "next" button is hit
         if (ae.getSource() == nextButton) {
             setName(tfname.getText());

@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import java.sql.*;
+
 /**
  * The actual health assessment where the user is prompted to a few questions. The answer is then recorded to assess
  * their likelihood of having the virus.
@@ -14,7 +16,19 @@ import java.util.*;
  * @version 8-24-2022
  */
 public class Assessment extends JFrame implements ActionListener{
-    
+    /**
+     * The URL to connect to the database of the assessment.
+     */
+    static final String URL_2 = "jdbc:mysql://localhost:3306/MONKEYPOXASSESSMENT";
+
+    /**
+     * The username for the mySQL login.
+     */
+    static final String USER = "root";
+    /**
+     * The password for the mySQL login.
+     */
+    static final String PASS = "";
     /**
      * The name of the user.
      */
@@ -49,6 +63,14 @@ public class Assessment extends JFrame implements ActionListener{
      * A counter to check what question number and question should be prompted up to the user.
      */
     private int count = 0;
+    /**
+     * A counter to check how many times the user answered "yes" to a question.
+     */
+    private int counter = 0;
+    /**
+     * The risk level the user is at based off their assessment answers.
+     */
+    private String risk;
     
     /**
      * The assessment page where the user will then answer a few questions about potential signs of having
@@ -142,8 +164,33 @@ public class Assessment extends JFrame implements ActionListener{
             } else if (no.isSelected()) {
                 userAnswers.add("No");
             }
+            for (int i = 0; i < userAnswers.size(); i++) {
+                if (userAnswers.get(i).equals("Yes")) {
+                    counter++;
+                }
+            }
+            if (counter == 3) {
+                setRisk("High Level");
+            } else if (counter == 2 || counter == 1) {
+                setRisk("At Risk");
+            } else {
+                setRisk("No Risk");
+            }
+            try {
+                Connection conn = DriverManager.getConnection(URL_2, USER, PASS);
+                Statement stmt = conn.createStatement();
+    
+                String insertData = "INSERT INTO DATA(NAME, RISK, TIME) VALUES('"+getName()+"', '"+getRisk()+"', CURRENT_TIMESTAMP)";
+    
+                stmt.executeUpdate(insertData);
+                
+                stmt.close();
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             setVisible(false);
-            new Result(getName(), getUserAnswers());
+            new Result(getName(), getUserAnswers(), getCounter(), getRisk());
         } 
     } 
     /**
@@ -199,6 +246,28 @@ public class Assessment extends JFrame implements ActionListener{
      */
     public String getName() {
         return name;
+    }
+    /**
+     * Gets the count of how many times a user answered "yes"
+     * 
+     * @return the "yes" counter
+     */
+    public int getCounter() {
+        return counter;
+    }
+    /**
+     * Sets the risk level of the user.
+     * 
+     * @param risk the risk level of the user
+     */
+    public void setRisk(String risk) {
+        this.risk = risk;
+    }
+    /**
+     * Returns the risk level of the user.
+     */
+    public String getRisk() {
+        return risk;
     }
     /**
      * The main method where the assessment GUI will be called.

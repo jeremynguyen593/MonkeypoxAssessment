@@ -12,11 +12,10 @@ import java.awt.event.*;
  * @version 8-24-2022
  */
 public class Disclaimer extends JFrame implements ActionListener{
-    
     /**
      * The name of the user.
      */
-    private String name;
+    static private String name;
     /**
      * The buttons to either begin the assessment or go back to the login page.
      */
@@ -27,6 +26,7 @@ public class Disclaimer extends JFrame implements ActionListener{
      * 
      * @param name the name of the user 
      */
+
     public Disclaimer(String name) {
         //keeps the name of the user
         this.name = name;
